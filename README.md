@@ -13,14 +13,14 @@ triggert by AJAX, talking back to the Web-Apps using the same server.
 
 ## webSocketSecureClass.php
 
-This implements a server that connects to a system/host that has a <b>certificate implemented</b> 
+This implements a server that connects to a system/host that has a <b>certificate implemented</b> <br>
 Accepts only client connectiosn via <b>wss://</b> and sockets connections from a php process via <b>ssl://</b>.
 See client class <b>socketTalkSecure.php</b>
 
 ## webSocketClass.php
 
-This implements a server that connects a to system/host that has <b>no<b> certificate implemented.
-Accepts client connectiosn via <b>ws://</b> and normal sockets connections from a php process.
+This implements a server that connects a to system/host that has <b>no</b> certificate implemented.<br>
+Accepts client connections via <b>ws://</b> and normal sockets connections from a php process.
 See client class <b>socketTalk.php</b>
 
 ## Usage 
