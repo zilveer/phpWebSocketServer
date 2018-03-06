@@ -20,8 +20,8 @@ See client class <b>socketTalkSecure.php</b>
 ## webSocketClass.php
 
 This implements a server that connects a to system/host that has <b>no<b> certificate implemented.
-Accepts cleint connectiosn via <b>ws://</b> and normal sockets connections from a php process.
-<b>socketTalk.php</b>
+Accepts client connectiosn via <b>ws://</b> and normal sockets connections from a php process.
+See client class <b>socketTalk.php</b>
 
 ## Usage 
 If time permits ... soon to come :-)
