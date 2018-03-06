@@ -11,17 +11,17 @@ The setup is used to have several Web-Apps talk to each other via the server as 
 triggert by AJAX, talking back to the Web-Apps using the same server. 
 
 
-## webSocketSecureClass.php##
+## webSocketSecureClass.php
 
 This implements a server that connects to a system/host that has a <b>certificate implemented</b> 
 Accepts only client connectiosn via <b>wss://</b> and sockets connections from a php process via <b>ssl://</b>.
 See client class <b>socketTalkSecure.php</b>
 
-## webSocketClass.php##
+## webSocketClass.php
 
 This implements a server that connects a to system/host that has <b>no<b> certificate implemented.
 Accepts cleint connectiosn via <b>ws://</b> and normal sockets connections from a php process.
 <b>socketTalk.php</b>
 
-## Usage ##
+## Usage 
 If time permits ... soon to come :-)
