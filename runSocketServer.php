@@ -6,13 +6,14 @@ if ($argc > 1) {
 
 // WebSocket Server Example
 if (isset($_GET['SSL'])) {
+    $secure = true;
     $keyAndCertFile = '/etc/ssl/certs/certAndKeyFile.pem'; //<= example
     $pathToCert = '/etc/ssl/certs'; //<= example
     $Address = '127.0.01';
     $Port = 8080;
     include "webSocketSecureClass.php";
 } else {
-
+    $secure = false;
     $Address = '127.0.0.1';
     $Port = 8080;
     include "webSocketSecureClass.php";
@@ -120,7 +121,11 @@ class customServer extends WebSocketServer {
     }
 
 }
-
-$customServer = new customServer($Address, $Port,false);
+/*
+ * *****************************************
+ * start server 
+ * *****************************************
+ */
+$customServer = new customServer($Address, $Port, $secure);
 $customServer->Start();
 ?>

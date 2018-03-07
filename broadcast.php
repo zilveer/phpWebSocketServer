@@ -11,8 +11,12 @@ if ($message == '') {
     //return;
     $message = 'hallo';
 }
+$secure = false;
+if (isset($_GET['SSL'])) {
+    $secure = true;
+}
 $uuid = uniqid('broadcast');
-$talk = new socketTalk($uuid, false);
+$talk = new socketTalk($uuid, $secure);
 
 //$talk->talk([]);
 //$talk->talk([]);
