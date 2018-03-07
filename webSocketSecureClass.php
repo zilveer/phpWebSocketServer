@@ -44,27 +44,36 @@ class WebSocketServer {
             $socketMaster,
             $Clients = [];
 
-    function __construct($Address, $Port) {
-        global $keyAndCertFile, $pathToCert;
-        /*
-         * ***********************************************
-         * below has to be done once ,if server runs on system using
-         * letsencrypt
-         * 
-         * openssl pkcs12 -export -in hostname.crt -inkey hostname.key -out hostname.p12
-         * openssl pkcs12 -in hostname.p12 -nodes -out hostname.pem
-         * ***********************************************
-         */
-        $context = stream_context_create();
-        //
-        // local_cert must be in PEM format and contain the KEY also
-        //
-        stream_context_set_option($context, 'ssl', 'local_cert', $keyAndCertFile);
-        stream_context_set_option($context, 'ssl', 'capth', $pathToCert);
-        stream_context_set_option($context, 'ssl', 'allow_self_signed', true);
-        stream_context_set_option($context, 'ssl', 'verify_peer', false);
+    function __construct($Address, $Port, $SSL = true) {
+        if ($SSL) {
+            global $keyAndCertFile, $pathToCert;
+            /*
+             * ***********************************************
+             * below has to be done once ,if server runs on system using
+             * letsencrypt
+             * 
+             * openssl pkcs12 -export -in hostname.crt -inkey hostname.key -out hostname.p12
+             * openssl pkcs12 -in hostname.p12 -nodes -out hostname.pem
+             * ***********************************************
+             */
+            $context = stream_context_create();
+            //
+            // local_cert must be in PEM format and contain the KEY also
+            //
+            stream_context_set_option($context, 'ssl', 'local_cert', $keyAndCertFile);
+            stream_context_set_option($context, 'ssl', 'capth', $pathToCert);
+            stream_context_set_option($context, 'ssl', 'allow_self_signed', true);
+            stream_context_set_option($context, 'ssl', 'verify_peer', false);
 
-        $socket = stream_socket_server("ssl://$Address:$Port", $errno, $errstr, STREAM_SERVER_BIND | STREAM_SERVER_LISTEN, $context);
+            $socket = stream_socket_server("ssl://$Address:$Port", $errno, $errstr, STREAM_SERVER_BIND | STREAM_SERVER_LISTEN, $context);
+        } else {
+            /*
+             * *****************************************
+             * normal tcp
+             * *****************************************
+             */
+            $socket = stream_socket_server("tcp://$Address:$Port", $errno, $errstr, STREAM_SERVER_BIND | STREAM_SERVER_LISTEN);
+        }
         if (!$socket) {
             $this->Log("Error $errno creating stream: $errstr");
             exit;
@@ -120,7 +129,9 @@ class WebSocketServer {
                                 continue;
                             }
                             $this->Handshake($Socket, $dataBuffer);
+                            $this->Write(intval($Socket), ' ');
                         } else {
+                            $this->Write($SocketID, ' ');
                             $this->log("Received bytes = $receivedBytes");
                             $this->Read($SocketID, $dataBuffer, $Socket);
                         }
@@ -155,7 +166,7 @@ class WebSocketServer {
 
     public function Close($Socket) {
         //socket_close($Socket);
-        stream_socket_shutdown($Socket, STREAM_SHUT_RDWR);
+        @stream_socket_shutdown($Socket, STREAM_SHUT_RDWR);
         $SocketID = intval($Socket);
         unset($this->Clients[$SocketID]);
         unset($this->Sockets[$SocketID]);
@@ -278,7 +289,7 @@ class WebSocketServer {
         if ($this->Clients[$SocketID]->Headers === 'websocket') {
             $M = $this->Encode($M);
         }
-        return @fwrite($this->Sockets[$SocketID], $M, strlen($M));
+        return fwrite($this->Sockets[$SocketID], $M, strlen($M));
     }
 
     // Methods to be configured by the user; executed directly after...

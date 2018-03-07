@@ -1,17 +1,25 @@
 <?php
 
+$Address = 'profetha.wlb-stuttgart.de';
+$Port = '10288';
+
 class socketTalk {
 
     public $uuid, $connected = false;
 
-    function __construct($uuid) {
+    function __construct($uuid, $SSL = true) {
         global $Address, $Port;
-        $context = stream_context_create();
-        stream_context_set_option($context, 'ssl', 'allow_self_signed', true);
-        stream_context_set_option($context, 'ssl', 'verify_peer', false);
-        stream_context_set_option($context, 'ssl', 'verify_peer_name', false);
-
-        $this->socketMaster = stream_socket_client("ssl://$Address:$Port", $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $context);
+        if ($SSL) {
+            $context = stream_context_create();
+            stream_context_set_option($context, 'ssl', 'allow_self_signed', true);
+            stream_context_set_option($context, 'ssl', 'verify_peer', false);
+            stream_context_set_option($context, 'ssl', 'verify_peer_name', false);
+            $this->socketMaster = stream_socket_client("ssl://$Address:$Port", $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $context);
+        } else {
+            $Address = '127.0.0.1';
+            $Port = '8080';
+            $this->socketMaster = stream_socket_client("tcp://$Address:$Port", $errno, $errstr, 30, STREAM_CLIENT_CONNECT);
+        }
 
         if (!$this->socketMaster) {
             echo $errstr;
@@ -20,24 +28,23 @@ class socketTalk {
         $this->uuid = $uuid;
         $this->connected = true;
         fwrite($this->socketMaster, "php process\n\n");
+        $buff = fread($this->socketMaster, 1024);
+
+        $what = fwrite($this->socketMaster, ' ');
+        $buff = fread($this->socketMaster, 1024);
     }
 
     function talk($msg) {
         if ($this->connected) {
-            $json = json_encode((object) Array('opcode' => 'feedback', 'uuid' => $this->uuid, 'message' => $msg));
-            fwrite($this->socketMaster, ($json));
+            $json = json_encode((object) $msg, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+            $what = fwrite($this->socketMaster, $json);
+            $buff = fread($this->socketMaster, 1024);
         }
-    }
-
-    function talkDirect($uuid, $msg) {
-        $this->uuid = $uuid;
-        $this->talk($msg);
     }
 
     function silent() {
         if ($this->connected) {
-            $this->talk('');
-            stream_socket_shutdown($this->socketMater, STREAM_SHUT_RDWR);
+            fclose($this->socketMaster);
         }
     }
 
