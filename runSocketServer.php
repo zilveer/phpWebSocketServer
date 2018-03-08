@@ -14,7 +14,7 @@ if (isset($_GET['SSL'])) {
     include "webSocketSecureClass.php";
 } else {
     $secure = false;
-    $Address = '127.0.0.1';
+    $Address = 'localhost';
     $Port = 8080;
     include "webSocketSecureClass.php";
 }

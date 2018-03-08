@@ -32,7 +32,7 @@ class WebSocketServer {
             $logFile = "log.txt",
             $logToDisplay = true,
             $Sockets = [],
-            $bufferLength = 4069 * 100,
+            $bufferLength = 2048 * 100,
             $maxClients = 20,
             // applied with Start()
             $errorReport = E_ALL,
@@ -112,29 +112,36 @@ class WebSocketServer {
                     }
                 } else {
 
-                    $dataBuffer = fread($Socket, $this->bufferLength);
-                    $receivedBytes = strlen($dataBuffer);
+                    $Client = $this->getClient($Socket);
+                    if ($Client->Handshake == false) {
+                        $dataBuffer = fread($Socket, $this->bufferLength);
+                        if (strpos(str_replace("\r", '', $dataBuffer), "\n\n") === false) { // headers have not been completely received --> wait --> handshake
+                            $this->onOther($SocketID, "Continue receving headers");
+                            continue;
+                        }
+                        $this->Handshake($Socket, $dataBuffer);
+                        continue;
+                    }
+
+                    if ($this->Clients[$SocketID]->Headers === 'websocket') {
+//                        $dataBuffer=fread($Socket, 32);
+//                        $l = $this->Decode($dataBuffer);                      
+                        $dataBuffer = fread($Socket, $this->bufferLength);
+                       
+                    } else {
+                        $l = fread($Socket, 32);
+                        $dataBuffer = fread($Socket, $l);
+                    }
+
                     if ($dataBuffer === false) {
                         $this->Close($Socket);
-                    } else if ($receivedBytes == 0) {
+                    } else if (strlen($dataBuffer) == 0) {
                         // no headers received (at all) --> disconnect
                         $SocketID = $this->Close($Socket);
                         $this->onError($SocketID, "Client disconnected - TCP connection lost");
                     } else {
-                        // no error, --> check handshake
-                        $Client = $this->getClient($Socket);
-                        if ($Client->Handshake == false) {
-                            if (strpos(str_replace("\r", '', $dataBuffer), "\n\n") === false) { // headers have not been completely received --> wait --> handshake
-                                $this->onOther($SocketID, "Continue receving headers");
-                                continue;
-                            }
-                            $this->Handshake($Socket, $dataBuffer);
-                            $this->Write(intval($Socket), ' ');
-                        } else {
-                            $this->Write($SocketID, ' ');
-                            $this->log("Received bytes = $receivedBytes");
-                            $this->Read($SocketID, $dataBuffer, $Socket);
-                        }
+                        $this->log("Received bytes = " . strlen($dataBuffer));
+                        $this->Read($SocketID, $dataBuffer);
                     }
                 }
             }

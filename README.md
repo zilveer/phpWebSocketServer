@@ -33,7 +33,7 @@ by default, or just tcp://
 
 ## broadcast.php
 
-Thsi shows usage of socketTalkSecure.php
+This shows usage of socketTalkSecure.php
 
 ## Usage 
 If time permits ... soon to come :-)

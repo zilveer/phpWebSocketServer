@@ -27,18 +27,20 @@ class socketTalk {
         }
         $this->uuid = $uuid;
         $this->connected = true;
-        fwrite($this->socketMaster, "php process\n\n");
-        $buff = fread($this->socketMaster, 1024);
 
-        $what = fwrite($this->socketMaster, ' ');
+        fwrite($this->socketMaster, "php process\n\n");
         $buff = fread($this->socketMaster, 1024);
     }
 
     function talk($msg) {
         if ($this->connected) {
+
             $json = json_encode((object) $msg, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+
+            $l = sprintf("%'032d", strlen($json));
+            $what = fwrite($this->socketMaster, $l . '');
             $what = fwrite($this->socketMaster, $json);
-            $buff = fread($this->socketMaster, 1024);
+           
         }
     }
 
