@@ -4,20 +4,29 @@ if ($argc > 1) {
     parse_str(implode('&', array_slice($argv, 1)), $_GET);
 }
 
-// WebSocket Server Example
+
 if (isset($_GET['SSL'])) {
     $secure = true;
     $keyAndCertFile = '/etc/ssl/certs/certAndKeyFile.pem'; //<= example
     $pathToCert = '/etc/ssl/certs'; //<= example
     $Address = '127.0.01';
     $Port = 8080;
-    include "webSocketSecureClass.php";
 } else {
     $secure = false;
     $Address = 'localhost';
     $Port = 8080;
-    include "webSocketSecureClass.php";
 }
+/*
+************************************************
+* inlcude the core server
+************************************************
+*/
+include "webSocketServer.php";
+/*
+************************************************
+* extend Server
+************************************************
+*/
 
 class customServer extends WebSocketServer {
 
@@ -64,6 +73,7 @@ class customServer extends WebSocketServer {
              * *****************************************
              */
             $this->Clients[$SocketID]->uuid = $packet->message;
+            $this->log("Broadcast $M");
             return;
         }
         if ($packet->opcode === 'feedback') {
@@ -121,6 +131,7 @@ class customServer extends WebSocketServer {
     }
 
 }
+
 /*
  * *****************************************
  * start server 

@@ -4,7 +4,7 @@ if ($argc > 1) {
     parse_str(implode('&', array_slice($argv, 1)), $_GET);
 }
 
-require 'socketTalkSecure.php';
+require 'socketPhpClient.php';
 
 $message = trim($_GET['m']);
 if ($message == '') {

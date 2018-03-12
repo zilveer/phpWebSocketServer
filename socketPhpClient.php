@@ -1,7 +1,7 @@
 <?php
 
-$Address = 'profetha.wlb-stuttgart.de';
-$Port = '10288';
+$Address = 'localhost';
+$Port = '8080';
 
 class socketTalk {
 
@@ -16,7 +16,7 @@ class socketTalk {
             stream_context_set_option($context, 'ssl', 'verify_peer_name', false);
             $this->socketMaster = stream_socket_client("ssl://$Address:$Port", $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $context);
         } else {
-            $Address = '127.0.0.1';
+            $Address = 'localhost';
             $Port = '8080';
             $this->socketMaster = stream_socket_client("tcp://$Address:$Port", $errno, $errstr, 30, STREAM_CLIENT_CONNECT);
         }

@@ -124,10 +124,7 @@ class WebSocketServer {
                     }
 
                     if ($this->Clients[$SocketID]->Headers === 'websocket') {
-//                        $dataBuffer=fread($Socket, 32);
-//                        $l = $this->Decode($dataBuffer);                      
                         $dataBuffer = fread($Socket, $this->bufferLength);
-                       
                     } else {
                         $l = fread($Socket, 32);
                         $dataBuffer = fread($Socket, $l);
@@ -287,6 +284,7 @@ class WebSocketServer {
     public function Read($SocketID, $M) {
         if ($this->Clients[$SocketID]->Headers === 'websocket') {
             $this->onData($SocketID, $this->Decode($M));
+            $this->Write($SocketID, json_encode((object) ['opcode' => 'next']));
         } else {
             $this->onData($SocketID, ($M));
         }

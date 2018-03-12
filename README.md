@@ -1,4 +1,5 @@
 # phpWebSocketServer
+
 Server witten in PHP that can handle connections via websocksets and normal sockets.
 The original version was implemented by Bryan Bliewert, nVentis@GitHub
 https://github.com/nVentis/PHP-WebSocketServer
@@ -14,7 +15,7 @@ triggert by AJAX, talking back to the Web-Apps using the same server.
 
 Use at own risc. 
 
-## webSocketSecureClass.php
+## webSocketServer.php
 
 This implements a server that ,by default, connects to a system/host that has a <b>certificate implemented</b> <br>
 Accepts only client connectiosn via <b>wss://</b> and sockets connections from a php process via <b>ssl://</b>.
@@ -26,14 +27,14 @@ You can also use this to just accept connections via  <b>ws:// </b> and  <b>tcp:
 
 This extends and customizes webSocketSecureClass.php and starts the server.
 
-## socketTalkSecure.php
+## socketPhpClient.php
 
 This is class that allows you to talk to a SocketServer from a php process using ssl://
 by default, or just tcp://
 
-## broadcast.php
+## testWithPHPSockets.php
 
-This shows usage of socketTalkSecure.php
+This shows usage of socketPhpClient.php
 
 ## Usage 
 If time permits ... soon to come :-)
