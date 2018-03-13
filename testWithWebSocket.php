@@ -10,7 +10,13 @@ and open the template in the editor.
         <title></title>
         <script src="socketWebClient.js"></script>
         <script>
-
+            /*
+             ******************************************
+             * we try to connect to our server and wait
+             * for a responds or an error
+             ******************************************
+             */
+            sock = socketWebClient();
         </script>
     </head>
     <body>
@@ -44,14 +50,8 @@ and open the template in the editor.
         <pre>";
         ?>
         <script>
-            /*
-             ******************************************
-             * we try to connect to our server and wait
-             * for a responds or an error
-             ******************************************
-             */
-            sock = socketWebClient();
-            
+
+
             function kickStart() {
                 if (!sock.isOpen()) {
                     /*
