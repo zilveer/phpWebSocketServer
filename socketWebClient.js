@@ -1,8 +1,6 @@
-
-
 function socketWebClient() {
     'uses strict';
-    var queue = [], uuid, socket,
+    var queue = [], uuid, socket = {},
             socketOpen = false, socketSend = false;
     try {
         socket = new WebSocket('ws://localhost:8080');
@@ -42,7 +40,7 @@ function socketWebClient() {
             socketSend = false;
         };
     } catch (ex) {
-        
+
     }
     function generateUUID() { // Public Domain/MIT
         var d = new Date().getTime();
@@ -56,7 +54,7 @@ function socketWebClient() {
         });
     }
 
-    function sendMsg(msg) {     
+    function sendMsg(msg) {
         if (!socketSend) {
             return;
         }

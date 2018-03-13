@@ -50,13 +50,11 @@ and open the template in the editor.
         <pre>";
         ?>
         <script>
-
-
             function kickStart() {
                 if (!sock.isOpen()) {
                     /*
                      ******************************************
-                     * wait until socket is open and server responded
+                     * wait 100ms until socket is open and server responded
                      * or we get an error. In both cases the above 
                      * function returns true, so we can 
                      * continue our work
@@ -65,7 +63,11 @@ and open the template in the editor.
                     window.setTimeout(kickStart, 100);
                     return;
                 }
-
+                /*
+                 ******************************************
+                 * Here comes your main code
+                 ******************************************
+                 */
                 xyz();
                 function xyz() {
                     sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo11'});
