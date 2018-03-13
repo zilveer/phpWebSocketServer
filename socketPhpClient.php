@@ -36,7 +36,6 @@ class socketTalk {
         if ($this->connected) {
 
             $json = json_encode((object) $msg, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
-
             $l = sprintf("%'032d", strlen($json));
             $what = fwrite($this->socketMaster, $l . '');
             $what = fwrite($this->socketMaster, $json);

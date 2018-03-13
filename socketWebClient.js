@@ -1,48 +1,48 @@
 
+
 function socketWebClient() {
     'uses strict';
-    var queue = [], uuid, socketOpen = false, sockTimer = null, host, protocol = 'ws://';
+    var queue = [], uuid, socket,
+            socketOpen = false, socketSend = false;
+    try {
+        socket = new WebSocket('ws://localhost:8080');
+        uuid = generateUUID();
+        socket.onopen = function () {
+            queue = [];
 
-    function init() {
-        try {
-
-            socket = new WebSocket('ws://localhost:8080');
-            socket.onopen = function (msg) {
+        };
+        socket.onerror = function () {
+            socketSend = false;
+            socketOpen = true;
+        };
+        socket.onmessage = function (msg) {
+            var packet;
+            if (msg.data.length === 0 || msg.data.indexOf('pong') >= 0) {
+                return;
+            }
+            packet = JSON.parse(msg.data);
+            if (packet.opcode === 'ready') {
+                socketOpen = true;
+                socketSend = true;
+                msg = {'opcode': 'uuid', 'message': uuid};
+                msg = JSON.stringify(msg);
+                socket.send(msg);
+            }
+            if (packet.opcode === 'next' && packet.uuid === uuid) {
+                queue.shift();
                 if (queue.length > 0) {
-                     queue = []
-                }
-            };
-            socket.onerror = function (msg) {
-
-            };
-            socket.onmessage = function (msg) {
-                var packet;
-                if (msg.data.length === 0 || msg.data.indexOf('pong') >= 0) {
-                    return;
-                }
-                packet = JSON.parse(msg.data);
-                if (packet.opcode === 'ready') {
-                    socketOpen = true;
-                    msg = {'opcode': 'uuid', 'message': uuid};
+                    msg = queue[0];
                     msg = JSON.stringify(msg);
                     socket.send(msg);
                 }
-                if (packet.opcode === 'next') {
-                    queue.shift();
-                    if (queue.length > 0) {
-                        msg = queue[0];
-                        msg = JSON.stringify(msg);
-                        socket.send(msg);
-                    }
-                }
-            };
-            socket.onclose = function (msg) {
-                alert('close');
-            };
-        } catch (ex) {
-            // log(ex);
-        }
-
+            }
+        };
+        socket.onclose = function () {
+            socketOpen = false;
+            socketSend = false;
+        };
+    } catch (ex) {
+        
     }
     function generateUUID() { // Public Domain/MIT
         var d = new Date().getTime();
@@ -56,10 +56,10 @@ function socketWebClient() {
         });
     }
 
-
-
-    function sendMsg(msg) {
-        var msg;
+    function sendMsg(msg) {     
+        if (!socketSend) {
+            return;
+        }
         try {
             if (socketOpen) {
                 queue.push(msg);
@@ -76,14 +76,14 @@ function socketWebClient() {
     function quit() {
         sendMsg({'opcode': 'quit', 'role': 'thisUserRole'});
         socket.close();
-        busOpen = false;
+        socketOpen = false;
     }
     function isOpen() {
-        return true;//SsocketOpen;
+        return socketOpen;
     }
 
-    uuid = generateUUID();
-    init();
+
+
     return {
         'sendMsg': sendMsg,
         'uuid': function () {

@@ -17,11 +17,11 @@ if (isset($_GET['SSL'])) {
 }
 $uuid = uniqid('broadcast');
 $talk = new socketTalk($uuid, $secure); 
-$talk->talk(['opcode' => 'broadcast', 'message1' => $_GET['m']]);   
-$talk->talk(['opcode' => 'broadcast', 'message2' => $_GET['m']]);   
-$talk->talk(['opcode' => 'broadcast', 'message3' => $_GET['m']]);   
-$talk->talk(['opcode' => 'broadcast', 'message4' => $_GET['m']]);   
-$talk->talk(['opcode' => 'broadcast', 'message5' => $_GET['m']]);   
+$talk->talk(['opcode' => 'broadcast', 'message1' => $message]);   
+$talk->talk(['opcode' => 'broadcast', 'message2' => $message]);   
+$talk->talk(['opcode' => 'broadcast', 'message3' => $message]);   
+$talk->talk(['opcode' => 'broadcast', 'message4' => $message]);   
+$talk->talk(['opcode' => 'broadcast', 'message5' => $message]);   
 $talk->talk(['opcode' => 'quit']);
 
 $talk->silent();

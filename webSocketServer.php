@@ -284,7 +284,7 @@ class WebSocketServer {
     public function Read($SocketID, $M) {
         if ($this->Clients[$SocketID]->Headers === 'websocket') {
             $this->onData($SocketID, $this->Decode($M));
-            $this->Write($SocketID, json_encode((object) ['opcode' => 'next']));
+            $this->Write($SocketID, json_encode((object) ['opcode' => 'next', 'uuid' => $this->Clients[$SocketID]->uuid]));
         } else {
             $this->onData($SocketID, ($M));
         }

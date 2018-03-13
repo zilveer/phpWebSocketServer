@@ -19,13 +19,21 @@ and open the template in the editor.
         ?>
         <h1>some test </h>
         <script>
-            window.setTimeout(xyz, 100);
-            function xyz() {
-                sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo'});
-                sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo'});
-                sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo'});
-                sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo'});
+            function kickStart() {
+                if (!sock.isOpen()) {
+                    window.setTimeout(kickStart, 50);
+                    return;
+                }
+                xyz();
+                function xyz() {
+                    sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo'});
+                    sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo'});
+                    sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo'});
+                    sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo'});
+                }
+
             }
+            window.addEventListener('load', kickStart, false);
         </script>
 </body>
 </html>
