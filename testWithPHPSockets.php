@@ -9,7 +9,7 @@ require 'socketPhpClient.php';
 $message = trim($_GET['m']);
 if ($message == '') {
     //return;
-    $message = 'hallo';
+    $message = 'hallo from PHP';
 }
 $secure = false;
 if (isset($_GET['SSL'])) {
