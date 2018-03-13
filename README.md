@@ -40,15 +40,15 @@ This shows usage of socketPhpClient.php
 
 Javascript function that establish the connection via WebSocket and
 reveals some functions upon return.
-<NOTE> If this function returns, it might still be in the 
+<p><b>NOTE:</b> If this function returns, it might still be in the 
 process of connecting to the server, therefor it is not guaranteed
 that the socket is ready to be used. This is checked outside this
 function.  
 
-## testWithwebSockets.php
+## testWithWebSockets.php
 
 This shows usage of socketWebClient.js
-<note> Here we are busy waiting using setTimeout() to check if the socket is 
+<p><b>NOTE:</b> Here we are busy waiting using setTimeout() to check if the socket is 
 open or if we get an error, in both cases we no longer wait for the socket connection.
 
 
