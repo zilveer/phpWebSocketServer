@@ -49,6 +49,8 @@ and open the template in the editor.
          window.addEventListener('load', kickStart, false);
         <pre>";
         ?>
+        <div id="broadcast">
+        </div>;
         <script>
             function kickStart() {
                 if (!sock.isOpen()) {
@@ -68,12 +70,18 @@ and open the template in the editor.
                  * Here comes your main code
                  ******************************************
                  */
+                sock.setCallback(onOpcode);
                 xyz();
                 function xyz() {
                     sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo11'});
                     sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo22'});
                     sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo33'});
                     sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo44'});
+                }
+                function onOpcode(packet) {
+                    var obj, p = packet;
+                    obj = document.getElementById('broadcast');
+                    obj.innerHTML += JSON.stringify(packet)+'<br>';
                 }
             }
             window.addEventListener('load', kickStart, false);
