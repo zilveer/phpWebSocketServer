@@ -37,9 +37,20 @@ class socketTalk {
 
             $json = json_encode((object) $msg, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
             $l = sprintf("%'032d", strlen($json));
+            /*
+             * *****************************************
+             * The server expects a 32 character long buffer
+             * first with the the length of the json data to
+             * come. Send length first 
+             * *****************************************
+             */
             $what = fwrite($this->socketMaster, $l . '');
+            /*
+             * *****************************************
+             * send data now
+             * *****************************************
+             */
             $what = fwrite($this->socketMaster, $json);
-           
         }
     }
 

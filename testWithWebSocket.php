@@ -10,30 +10,71 @@ and open the template in the editor.
         <title></title>
         <script src="socketWebClient.js"></script>
         <script>
-            sock = socketWebClient();
+
         </script>
     </head>
     <body>
         <?php
-        // put your code here
+        echo "<h1>some test </h1>
+        <pre>
+        sock = socketWebClient();
+        function kickStart() {
+             if (!sock.isOpen()) {
+                 /*
+                  ******************************************
+                  * wait until socket is open and server responded
+                  * or we get an error. In both cases the above 
+                  * function returns true, so we can 
+                  * continue our work
+                  ******************************************
+                  */
+                 window.setTimeout(kickStart, 100);
+                 return;
+             }
+
+             xyz();
+             function xyz() {
+                 sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo11'});
+                 sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo22'});
+                 sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo33'});
+                 sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo44'});
+             }
+         }
+         window.addEventListener('load', kickStart, false);
+        <pre>";
         ?>
-        <h1>some test </h>
         <script>
+            /*
+             ******************************************
+             * we try to connect to our server and wait
+             * for a responds or an error
+             ******************************************
+             */
+            sock = socketWebClient();
+            
             function kickStart() {
                 if (!sock.isOpen()) {
-                    window.setTimeout(kickStart, 50);
+                    /*
+                     ******************************************
+                     * wait until socket is open and server responded
+                     * or we get an error. In both cases the above 
+                     * function returns true, so we can 
+                     * continue our work
+                     ******************************************
+                     */
+                    window.setTimeout(kickStart, 100);
                     return;
                 }
+
                 xyz();
                 function xyz() {
-                    sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo'});
-                    sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo'});
-                    sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo'});
-                    sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo'});
+                    sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo11'});
+                    sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo22'});
+                    sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo33'});
+                    sock.sendMsg({'opcode': 'broadcast', 'message': 'hallo44'});
                 }
-
             }
             window.addEventListener('load', kickStart, false);
         </script>
-</body>
+    </body>
 </html>

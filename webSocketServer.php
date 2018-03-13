@@ -126,8 +126,8 @@ class WebSocketServer {
                     if ($this->Clients[$SocketID]->Headers === 'websocket') {
                         $dataBuffer = fread($Socket, $this->bufferLength);
                     } else {
-                        $l = fread($Socket, 32);
-                        $dataBuffer = fread($Socket, $l);
+                        $l = fread($Socket, 32); // <== length of data to come from client
+                        $dataBuffer = fread($Socket, $l); //<== data from cleint
                     }
 
                     if ($dataBuffer === false) {
