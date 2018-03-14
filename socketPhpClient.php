@@ -6,6 +6,7 @@ $Port = '8080';
 class socketTalk {
 
     public $uuid, $connected = false;
+    private $socketMaster;
 
     function __construct($uuid, $SSL = true) {
         global $Address, $Port;

@@ -44,9 +44,20 @@ function socketWebClient() {
         socketSend = false;
     };
     function callback(p) {
+        /*
+         ******************************************
+         * dummy call back
+         ******************************************
+         */
         return;
     }
     function setCallback(func) {
+        /*
+         ******************************************
+         * overwrite dummy call back with your own
+         * function func
+         ******************************************
+         */
         callback = func;
     }
 
@@ -76,6 +87,7 @@ function socketWebClient() {
                 socket.send(msg);
             }
         } catch (ex) {
+            socketSend = false;
             alert('socket error: ' + ex);
         }
     }
@@ -83,11 +95,11 @@ function socketWebClient() {
         sendMsg({'opcode': 'quit', 'role': 'thisUserRole'});
         socket.close();
         socketOpen = false;
+        socketSend = false;
     }
     function isOpen() {
         return socketOpen;
     }
-
 
 
     return {
